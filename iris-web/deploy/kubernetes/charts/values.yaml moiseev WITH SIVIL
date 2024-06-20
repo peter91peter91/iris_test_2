@@ -84,8 +84,8 @@ irisapp:
    ## @param irisapp.service Iris Frontend Service
    ##
    service:
-     port: 8000   # порт слушает ирис
-     nodePort: 31111  #moiseev   # доступ извне- Зафиксировал порт для NodePort
+     port: 8000
+     nodePort: 31111  #moiseev   # Задал фиксированный порт для NodePort
 
     
    ## @param irisapp.type Iris Frontend Service type
@@ -94,13 +94,10 @@ irisapp:
 
    ## @param  Iris Frontend Environments
    ##
-   # psql -U postgres -P 7yLLlgAaRR
-
    POSTGRES_USER: postgres
-   POSTGRES_PASSWORD: postgres
+   POSTGRES_PASSWORD: postgres    # psql -U postgres -P 7yLLlgAaRR
    POSTGRES_ADMIN_USER: postgres
    POSTGRES_ADMIN_PASSWORD: postgres
-
    POSTGRES_DB: iris_db 
    POSTGRES_PORT: 5432
    #POSTGRES_SERVER: postgres.<name_space>.svc.cluster.local
@@ -146,13 +143,10 @@ irisworker:
 
    ## @param  Iris Backend Environments
    ##
-    # psql -U postgres -P 7yLLlgAaRR
-
    POSTGRES_USER: postgres
-   POSTGRES_PASSWORD: postgres
+   POSTGRES_PASSWORD: postgres    # psql -U postgres -P 7yLLlgAaRR
    POSTGRES_ADMIN_USER: postgres
    POSTGRES_ADMIN_PASSWORD: postgres
-
    POSTGRES_DB: iris_db   
    POSTGRES_PORT: 5432
    #POSTGRES_SERVER: postgres.<name_space>.svc.cluster.local
@@ -175,15 +169,16 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     
   hosts:
-    - host: iris.local
+#    - host: <host_name>
+    - host: localhost
       paths:
         - path: /(.*)
           pathType: ImplementationSpecific
           serviceName: iriswebapp-app
-          servicePort: 8000
-
+          #servicePort: 8000
+          servicePort: 31111 #moiseev
   tls:
     - secretName: iris-ingress-tls-secret
       hosts:
-        - iris.local
-  
+#    - host: <host_name>
+    - host: localhost     
