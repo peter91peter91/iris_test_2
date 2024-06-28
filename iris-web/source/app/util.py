@@ -108,9 +108,9 @@ def g_db_add(obj):
         db.session.add(obj)
 
 
-def g_db_del(obj):
-    if obj:
-        db.session.delete(obj)
+# def g_db_del(obj):  # закомментил  моисеев
+#     if obj:
+#         db.session.delete(obj)
 
 
 class PgEncoder(json.JSONEncoder):
@@ -248,7 +248,7 @@ def set_caseid_from_current_user():
 
 
 def handle_exception(e, request_data):
-    cookie_session = request_data.cookies.get('session')
+    cookie_session = request_data.get('session')
     if not cookie_session:
         return set_caseid_from_current_user()
 

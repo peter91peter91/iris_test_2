@@ -135,8 +135,8 @@ def run_post_init(development=False):
             exit(1)
 
         # Setup database before everything
-        #log.info("Adding pgcrypto extension")
-        #pg_add_pgcrypto_ext()   # moiseev  
+        log.info("Adding pgcrypto extension")
+        pg_add_pgcrypto_ext()   # moiseev закомментить пробовал 
 
         # Setup database before everything
         with app.app_context():
@@ -255,7 +255,8 @@ def run_post_init(development=False):
                 log.warning("|  THIS IS DEMO INSTANCE   |")
                 log.warning("| DO NOT USE IN PRODUCTION |")
                 log.warning("============================")
-                users_data = create_demo_users(def_org, gadm, ganalysts,
+                #users_data = create_demo_users(def_org, gadm, #ganalysts,
+                users_data = create_demo_users(def_org, gadm, ganalysts
                                                int(app.config.get('DEMO_USERS_COUNT', 10)),
                                                app.config.get('DEMO_USERS_SEED'),
                                                int(app.config.get('DEMO_ADM_COUNT', 4)),
@@ -981,10 +982,11 @@ def create_safe_auth_model():
     db.session.commit()
 
 ###################moiseev
-    existing_group = get_group_by_name("Analysts")#moiseev
-    if existing_group:#moiseev
-        ganalysts = existing_group#moiseev
-        log.info('--fixed by MOISEEV-- Group "Analysts" already exists. Using existing group.')#moiseev
+    #existing_group = get_group_by_name("Analysts")#moiseev
+    #if existing_group:#moiseev
+    #    ganalysts = existing_group#moiseev
+    #    log.info('--fixed by MOISEEV-- Group "Analysts" already exists. Using existing group.')#moiseev
+    if (1==1): print("заглушка")
     else:#moiseev
         # Create new Analysts Group object  
         try:

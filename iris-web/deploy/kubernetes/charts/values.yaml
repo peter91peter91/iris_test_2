@@ -75,8 +75,8 @@ irisapp:
    tag: v2.4.7
    ## @param irisapp.imagePullPolicy Iris Frontend imagePullPolicy
    ##
-   # imagePullPolicy: "IfNotPresent"
-   imagePullPolicy: Always   #moiseev- поставил для тестов 
+   imagePullPolicy: "IfNotPresent"
+   #imagePullPolicy: Always   #moiseev- поставил для тестов 
    ## @param irisapp.replicaCount Iris Frontend replicaCount
    ##
    replicaCount: 1
@@ -111,15 +111,13 @@ irisapp:
    IRIS_SECURITY_PASSWORD_SALT: ARandomSalt-NotThisOneEither
    IRIS_ADM_USERNAME: administrator
    # Must be 12 characters minimum and contains a capital letter and a number. 
-   IRIS_ADM_PASSWORD: Hello12345
-
-  #  IRIS_USER_USERNAME: regularuser  #moiseev добавим обычного юзера  -НЕТ В ФУНКЦИОНАЛЕ ПРИЛОЖЕНИЯ ИРИС
-  #  # Must be 12 characters minimum and contains a capital letter and a number. 
-  #  IRIS_USER_PASSWORD: Regular12345
-
+   IRIS_ADM_PASSWORD: Hello12345!
+   IRIS_AUTHENTICATION_TYPE: local  #moiseev Добавил. для корректной авторизации
+   #IRIS_AUTHENTICATION_CREATE_USER_IF_NOT_EXIST: True #moiseev Добавил для теста
    DB_RETRY_COUNT: 5
    DB_RETRY_DELAY: 5
    INTERFACE_HTTPS_PORT: 443
+   IRIS_UPSTREAM_SERVER: 
 
 ## @section Iris Backend Configuration 
 ##
@@ -138,8 +136,8 @@ irisworker:
    tag: v2.4.7
    ## @param irisworker.imagePullPolicy Iris Backend imagePullPolicy
    ##
-   imagePullPolicy: Always   #!!! поставил для тестов
-   # imagePullPolicy: "IfNotPresent"
+   #imagePullPolicy: Always   #!!! поставил для тестов
+   imagePullPolicy: "IfNotPresent"
    ## @param irisworker.replicaCount Iris Backend replicaCount
    ##
    replicaCount: 1
@@ -161,6 +159,7 @@ irisworker:
    DOCKERIZED: 1
    IRIS_SECRET_KEY: AVerySuperSecretKey-SoNotThisOne
    IRIS_SECURITY_PASSWORD_SALT: ARandomSalt-NotThisOneEither
+   CELERY_BROKER: "amqp://rabbitmq"  #moiseev тестово добавил для очереди задач rabbit по протоколу amqp 
 
 ## @section Nginx Ingress Configuration
 ##
@@ -171,18 +170,26 @@ ingress:
   annotations:
     # Add any annotations specific to your Ingress controller
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    
+    nginx.ingress.kubernetes.io/rewrite-target: /$1 # Nginx будет переписывать путь запроса  для  маршрутизации запросов к IRIS приложению.
+    nginx.ingress.kubernetes.io/ssl-redirect: "true" 
+    #nginx.ingress.kubernetes.io/ssl-redirect: "false" #ВЫКЛЮЧАЕМ ПЕРЕНАПРАВЛЕНИЕ НА HTTPS
+#########################
+#moiseev тестовые конфиги session-cookie для работы с ними кубером-НЕ ПОМОГЛО
+    nginx.ingress.kubernetes.io/session-cookie-name: "session" #moiseev 
+    nginx.ingress.kubernetes.io/session-cookie-httponly: "true" #moiseev 
+    nginx.ingress.kubernetes.io/session-cookie-secure: "true" #moiseev 
+    nginx.ingress.kubernetes.io/session-cookie-samesite: "Lax" #moiseev 
+    nginx.ingress.kubernetes.io/session-cookie-expires: "86400" #moiseev  
+#########################
   hosts:
-    - host: iris.local
+    - host: iris.local # Nginx Ingress Controller принимает запросы на этот домен
       paths:
-        - path: /(.*)
+        - path: /(.*) # для домена iris.local все запросы, соответствующие пути /(.*), будут направляться на сервис с именем iriswebapp-app на порту 8000.
           pathType: ImplementationSpecific
           serviceName: iriswebapp-app
-          servicePort: 8000
+          servicePort: 8000 
 
-  tls:
+  tls:   #moiseev пробовал комментировать блок 
     - secretName: iris-ingress-tls-secret
       hosts:
         - iris.local

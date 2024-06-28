@@ -290,7 +290,8 @@ class Config:
 
     PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
     SESSION_COOKIE_SAMESITE = 'Lax'
-    SESSION_COOKIE_SECURE = True
+    #SESSION_COOKIE_SECURE = True   #это когда cookie-файлы сессий должны передаваться только по HTTPS закомментил moiseev -это для https
+    SESSION_COOKIE_SECURE = False   #так cookie-файлы сессий могут передаваться по незашифрованному соединению HTTP, а не только по защищенному HTTPS moiseev   -так надо для локальных тестов 
 
     PG_ACCOUNT = PG_ACCOUNT_
     PG_PASSWD = PG_PASSWD_
@@ -303,6 +304,7 @@ class Config:
     DB_RETRY_COUNT = config.load('DB', 'RETRY_COUNT', fallback=3)
     DB_RETRY_DELAY = config.load('DB', 'RETRY_DELAY', fallback=0.5)
 
+# moiseev демо-режим ,пробовал комментить 
     DEMO_MODE_ENABLED = config.load('IRIS_DEMO', 'ENABLED', fallback=False)
     if DEMO_MODE_ENABLED == 'True':
         DEMO_DOMAIN = config.load('IRIS_DEMO', 'DOMAIN', fallback=None)

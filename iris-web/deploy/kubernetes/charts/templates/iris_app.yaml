@@ -103,15 +103,13 @@ spec:
           - name:  IRIS_ADM_PASSWORD
             value: {{ .Values.irisapp.IRIS_ADM_PASSWORD | quote }}
 
-          # - name:  IRIS_USER_USERNAME  #moiseev  -для обычного юзера  -НЕТ В ФУНКЦИОНАЛЕ ПРИЛОЖЕНИЯ ИРИС
-          #   value: {{ .Values.irisapp.IRIS_USER_USERNAME | quote }}    
-          # - name:  IRIS_USER_PASSWORD  #moiseev  -для обычного юзера -НЕТ В ФУНКЦИОНАЛЕ ПРИЛОЖЕНИЯ ИРИС
-          #   value: {{ .Values.irisapp.IRIS_USER_PASSWORD | quote }}           
-
           - name:  POSTGRES_DB  #moiseev   тестовая строка, добавили считку названия бд,но может не повлиять
             value: {{ .Values.irisapp.POSTGRES_DB | quote }}     
           # - name: TZ
-          #   value: "Europe/Moscow"  #moiseev
+          #   value: "Europe/Moscow"  #moiseev в будущем добавить для логов корректных
+
+          - name:  IRIS_AUTHENTICATION_TYPE  #moiseev   считываем local авторизацию 
+            value: {{ .Values.irisapp.IRIS_AUTHENTICATION_TYPE | quote }}    
 
           ports:
             - containerPort: 8000
@@ -167,7 +165,7 @@ spec:
   ports:
    - port: {{ .Values.irisapp.service.port }}
      targetPort: {{ .Values.irisapp.service.targetPort }}
-     nodePort: {{ .Values.irisapp.service.nodePort }}   # moiseev фиксируем порт WEB iris app -считываем nodePort из Values 
+     nodePort: {{ .Values.irisapp.service.nodePort }}   # moiseev фиксируем порт WEB iris app -считываем nodePort из Values -  не обязательно. можем через локалхост ходить 
   selector:
    app: {{ .Values.irisapp.app }}
 ---

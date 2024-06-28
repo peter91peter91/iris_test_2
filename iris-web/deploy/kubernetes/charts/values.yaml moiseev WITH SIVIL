@@ -108,7 +108,7 @@ irisapp:
    IRIS_SECURITY_PASSWORD_SALT: ARandomSalt-NotThisOneEither
    IRIS_ADM_USERNAME: administrator
    # Must be 12 characters minimum and contains a capital letter and a number. 
-   IRIS_ADM_PASSWORD: Hello12345
+   IRIS_ADM_PASSWORD: Hello12345!
 
   #  IRIS_USER_USERNAME: regularuser  #moiseev добавим обычного юзера  -НЕТ В ФУНКЦИОНАЛЕ ПРИЛОЖЕНИЯ ИРИС
   #  # Must be 12 characters minimum and contains a capital letter and a number. 

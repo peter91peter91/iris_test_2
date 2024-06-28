@@ -94,6 +94,9 @@ spec:
           # - name: TZ
           # value: "Europe/Moscow"  #moiseev
 
+          - name:  IRIS_AUTHENTICATION_TYPE  #moiseev   считываем local авторизацию 
+            value: {{ .Values.irisapp.IRIS_AUTHENTICATION_TYPE | quote }}    
+
           volumeMounts:
             - mountPath: /home/iris/downloads
               name: iris-downloads
